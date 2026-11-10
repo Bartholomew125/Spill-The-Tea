@@ -1,0 +1,24 @@
+body {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    height: 100vh;
+}
+
+header, main, footer {
+    padding: 1em;
+    min-height: 2em;
+    width: 100%;
+}
+
+header {
+    background-color: blue;
+}
+
+footer {
+    background-color: red;
+}
+
+main {
+    flex-grow: 1;
+}
