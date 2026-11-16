@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from sqlalchemy import CheckConstraint, ForeignKey, PrimaryKeyConstraint, String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from flask_sqlalchemy import SQLAlchemy
@@ -81,3 +81,15 @@ with app.app_context():
 @app.route("/")
 def index():
     return render_template("index.html")
+
+@app.route("/Register", methods=["Get", "Post"])
+def register():
+    form = RegisterForm(request.form)
+
+    if request.method == "Post" and form.validate():
+        email = form.email.data
+        password = form.password.data
+
+    db.session.add(
+        User()
+    )
