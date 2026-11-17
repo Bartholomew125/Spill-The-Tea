@@ -3,8 +3,7 @@ from flask import Flask, redirect, render_template, request, session
 from sqlalchemy import CheckConstraint, ForeignKey, PrimaryKeyConstraint, String, insert, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from flask_sqlalchemy import SQLAlchemy
-from app.forms.register_form import RegisterForm
-from app.forms.login_form import LoginForm
+from app.forms import RegisterForm, LoginForm
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
