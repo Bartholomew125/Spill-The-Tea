@@ -1,5 +1,5 @@
 import os
-from flask import Flask, redirect, render_template, request
+from flask import Flask, redirect, render_template, request, session
 from sqlalchemy import CheckConstraint, ForeignKey, PrimaryKeyConstraint, String, insert, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from flask_sqlalchemy import SQLAlchemy
@@ -13,6 +13,14 @@ class Base(DeclarativeBase): ...
 
 
 app = Flask(__name__)
+
+# Encryption
+# TODO: app.config["SECRET_KEY"] = os.environ["FLASK_SECRET_KEY"]
+
+# Session cookie parameters
+# app.config['SESSION_COOKIE_SECURE'] = True
+# app.config['SESSION_COOKIE_HTTPONLY'] = True
+# app.config['SESSION_COOKIE_SAMESITE'] = 'Strict' # CSRF mitigation
 
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 
@@ -120,3 +128,32 @@ def register():
             errors.append("User already exists")
 
     return render_template("register_page.html", form=form, title=title, errors=errors)
+
+@app.route("/login", methods= ["GET", "POST"])
+def login():
+    form = LoginForm()
+    title = "Login"
+    errors = []
+
+    if request.method == "POST" and form.validate():
+        email = form.email.data
+        entered_password = form.password.data
+        assert entered_password is not None
+
+        user = db.session.execute(
+            select(User).where(User.username == email)
+        ).scalar_one_or_none()
+
+        if user and check_password_hash(user.password_hash, entered_password):
+            session.clear()
+            # User id is preferred over username (email)
+            # Since the id is fixed but username might change over time
+            session["user_id"] = user.id
+
+            #TODO: Redirect to e.g. home page on successful login
+            return redirect("/")
+            
+        else:
+            errors.append("Invalid email or password")
+
+    return render_template("login_page.html", form=form, title=title, errors=errors)
