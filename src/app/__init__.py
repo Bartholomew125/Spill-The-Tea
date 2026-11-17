@@ -81,3 +81,8 @@ with app.app_context():
 @app.route("/")
 def index():
     return render_template("index.html")
+
+@app.route("/home", methods=["GET"])
+def home():
+    title = "Home"
+    return render_template("home_page.html", title=title)
