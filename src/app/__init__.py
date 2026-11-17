@@ -1,10 +1,12 @@
-from hashlib import sha3_512
 import os
 from flask import Flask, redirect, render_template, request
 from sqlalchemy import CheckConstraint, ForeignKey, PrimaryKeyConstraint, String, insert, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from flask_sqlalchemy import SQLAlchemy
 from app.forms.register_form import RegisterForm
+from app.forms.login_form import LoginForm
+
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class Base(DeclarativeBase): ...
@@ -95,7 +97,7 @@ def register():
         password = form.password.data
 
         assert password is not None
-        password_hash = sha3_512(password.encode()).hexdigest()
+        password_hash = generate_password_hash(password)
 
         row = db.session.execute(
             select(User).where(User.username == email)
