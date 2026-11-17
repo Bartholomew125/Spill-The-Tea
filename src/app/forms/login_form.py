@@ -1,17 +1,17 @@
 from wtforms import Form
 from wtforms import EmailField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import input_required
+from wtforms.validators import InputRequired
 
 
 class LogInForm(Form):
     email = EmailField(
         label = "Email",
-        validators = [input_required(message="Please enter your email")],
+        validators = [InputRequired(message="Please enter your email")],
     )
 
     password = PasswordField(
         label = "Password",
-        validators = [input_required(message="Please enter your password")],
+        validators = [InputRequired(message="Please enter your password")],
     )
 
     remember_me = BooleanField(label="Remember me")
