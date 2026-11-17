@@ -1,5 +1,4 @@
-from wtforms import Form
-from wtforms import EmailField, PasswordField, SubmitField, BooleanField
+from wtforms import Form, EmailField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import InputRequired
 
 
