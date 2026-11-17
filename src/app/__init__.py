@@ -1,8 +1,10 @@
+from hashlib import sha3_512
 import os
-from flask import Flask, render_template, request
-from sqlalchemy import CheckConstraint, ForeignKey, PrimaryKeyConstraint, String
+from flask import Flask, redirect, render_template, request
+from sqlalchemy import CheckConstraint, ForeignKey, PrimaryKeyConstraint, String, insert, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from flask_sqlalchemy import SQLAlchemy
+from app.forms.register_form import RegisterForm
 
 
 class Base(DeclarativeBase): ...
@@ -20,7 +22,7 @@ class User(db.Model):
 
     id:            Mapped[int] = mapped_column(primary_key=True)
     username:      Mapped[str] = mapped_column(String(32), unique=True)
-    password_hash: Mapped[str] = mapped_column(String(255)) # Depends on hashing algorithm.
+    password_hash: Mapped[str] = mapped_column(String(128)) # Depends on hashing algorithm.
     display_name:  Mapped[str] = mapped_column(String(32))
     biography:     Mapped[str] = mapped_column(String(1024))
 
@@ -82,14 +84,37 @@ with app.app_context():
 def index():
     return render_template("index.html")
 
-@app.route("/Register", methods=["Get", "Post"])
+@app.route("/register", methods=["GET", "POST"])
 def register():
     form = RegisterForm(request.form)
+    title = "Create account"
+    errors = []
 
-    if request.method == "Post" and form.validate():
+    if request.method == "POST" and form.validate():
         email = form.email.data
         password = form.password.data
 
-    db.session.add(
-        User()
-    )
+        assert password is not None
+        password_hash = sha3_512(password.encode()).hexdigest()
+
+        row = db.session.execute(
+            select(User).where(User.username == email)
+        ).one_or_none()
+
+        if row is None:
+            row = db.session.execute(
+                insert(User).values({
+                    "username": email,
+                    "password_hash": password_hash,
+                    "display_name": "",
+                    "biography": ""
+                })
+            )
+            db.session.commit()
+
+            return redirect("/login")
+
+        else:
+            errors.append("User already exists")
+
+    return render_template("register_page.html", form=form, title=title, errors=errors)
