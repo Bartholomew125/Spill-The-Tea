@@ -126,7 +126,7 @@ def register():
         else:
             errors.append("User already exists")
 
-    return render_template("register_page.html", form=form, title=title, errors=errors)
+    return render_template("register.html", form=form, title=title, errors=errors)
 
 @app.route("/login", methods= ["GET", "POST"])
 def login():
@@ -155,4 +155,4 @@ def login():
         else:
             errors.append("Invalid email or password")
 
-    return render_template("login_page.html", form=form, title=title, errors=errors)
+    return render_template("login.html", form=form, title=title, errors=errors)
