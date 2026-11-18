@@ -1,8 +1,10 @@
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from sqlalchemy import CheckConstraint, ForeignKey, PrimaryKeyConstraint, String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from flask_sqlalchemy import SQLAlchemy
+
+from app.forms import Search
 
 
 class Base(DeclarativeBase): ...
@@ -81,3 +83,11 @@ with app.app_context():
 @app.route("/")
 def index():
     return render_template("index.html")
+
+@app.route("/search", methods=["GET", "POST"])
+def search():
+    form = Search(request.form)
+    res = []
+    if request.method == "POST" and form.validate():
+        res = ["Result1", "Result2"]
+    return render_template("search.html", form=form, res=res)

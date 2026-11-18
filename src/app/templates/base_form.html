@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" href="style.css">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{{ title }}</title>
+    </head>
+
+    <body>
+
+        <main>
+            <h1>{{ title }}</h1>
+
+            {% block body %}
+
+            {% endblock %}
+
+            <ul>
+            {% for err in errors %}
+                <li>{{ err }}</li>
+            {% endfor %}
+            </ul>
+
+        </main>
+        
+    </body>
+</html>

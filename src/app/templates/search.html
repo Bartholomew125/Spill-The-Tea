@@ -1,0 +1,14 @@
+{% extends 'base_form.html' %}
+
+{% block body %}
+    <form method="post">
+        {{ form.search_bar }}
+        {{ form.type_toggle }}
+    </form>
+    <ol>
+    {% for row in res %}
+        <li>{{ row }}</li>    
+    {% endfor %}
+    </ol>
+{% endblock body %}
+
