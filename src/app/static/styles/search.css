@@ -1,0 +1,54 @@
+:root {
+    --border-color: black;
+    --border-width: 0.1rem;
+    --border-radius: 1rem;
+    --padding: 1rem;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    width: 80%;
+    margin: auto;
+}
+
+form {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+}
+
+form > input {
+    flex-grow: 1;
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--padding);
+}
+
+form > select {
+    appearance: none; /* Remove predefined styling */
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--padding);
+}
+
+/* https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/list-style */
+ol {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: top;
+    align-items: stretch;
+    list-style: none;
+    padding: 0;
+    gap: 1em;
+}
+
+ol > li {
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--padding);
+}
