@@ -6,4 +6,4 @@ class Search(Form):
     search_bar = SearchField(render_kw={"placeholder": "Search"}, 
         validators=[InputRequired("A search query is required to search")]
     )
-    type_toggle = SelectField(choices=[("posts", "Posts"), ("users", "Users")])
+    type_select = SelectField(choices=[("posts", "Posts"), ("users", "Users")])
