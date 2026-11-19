@@ -1,18 +1,24 @@
 {% extends 'base_form.html' %}
 
+{% block head %}
+<link rel="stylesheet" href="/static/styles/login.css">
+{% endblock head %}
+
 {% block body %}
     <form action="" method="post">
         {{ form.email.label }}
         {{ form.email}}
         {{ form.password.label }}
         {{ form.password}}
-        {{ form.remember_me.label }}
-        {{ form.remember_me}}
+        <p>
+            {{ form.remember_me.label }}
+            {{ form.remember_me}}
+        </p>
         {{ form.submit }}
     </form>
 
     <p id="register_link">
-        Don't have an account? <a href="register.html">Register</a>
+        Don't have an account? <a href="register">Register</a>
     </p>
 
 {% endblock body %}
