@@ -98,11 +98,12 @@ def index():
 
 @app.route("/search", methods=["GET", "POST"])
 def search():
-    form = Search(request.form)
+    form = SearchForm(request.form)
     res = []
     if request.method == "POST" and form.validate():
         selected_type: Literal["users", "posts"] = form.type_select.data
-        query: str = form.search_bar.data
+        query = form.search_bar.data
+        assert query is not None
 
         match selected_type:
             case "posts":
