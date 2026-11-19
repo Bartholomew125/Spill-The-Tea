@@ -1,0 +1,41 @@
+@import url("vars.css");
+
+body {
+    height: 100vh;
+}
+
+main {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    border: var(--border-thinkness) solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--padding);
+    gap: 1rem;
+    width: 20rem;
+}
+
+form > label {
+    align-self: center;
+}
+
+form > input {
+    border: var(--border-thinkness) solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--padding);
+}
+
+form > #submit {
+    align-self: center;
+    width: 50%;
+    background-color: white;
+}

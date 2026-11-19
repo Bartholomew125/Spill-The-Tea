@@ -1,0 +1,5 @@
+@import url("register.css");
+
+form > p {
+    align-self: center;
+}
