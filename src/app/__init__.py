@@ -60,6 +60,14 @@ class Post(db.Model):
     downvotes:   Mapped[int] = mapped_column(default=0)
 
 
+class PostImage(db.Model):
+    __tablename__ = "post_images"
+
+    id:        Mapped[int] = mapped_column(primary_key=True)
+    post_id:   Mapped[int] = mapped_column(ForeignKey(Post.id))
+    image_path: Mapped[str] = mapped_column(String(255))
+
+
 class Comment(db.Model):
     __tablename__ = "comments"
 
