@@ -1,0 +1,20 @@
+{% extends 'base_form.html' %}
+
+{% block head %}
+<title>{{ title }}</title>
+<link rel="stylesheet" href="/static/styles/post.css">
+{% endblock head %}
+
+{% block body %}
+    <!-- Encoding is set to multipar/form-data to handle images !-->
+     <!-- Default encoding only preserves the file names and drops content -->
+    <form action="" method="post" enctype="multipart/form-data">
+        {{ form.title.label }}
+        {{ form.title }}
+        {{ form.images.label }}
+        {{ form.images }}
+        {{ form.description.label }}
+        {{ form.description }}
+        {{ form.submit }}
+    </form>
+{% endblock body %}
