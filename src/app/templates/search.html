@@ -1,0 +1,18 @@
+{% extends 'base_form.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/styles/search.css">
+{% endblock head %}
+
+{% block body %}
+    <form method="post">
+        {{ form.search_bar }}
+        {{ form.type_select }}
+    </form>
+    <ol>
+    {% for row in res %}
+        <li>{{ row }}</li>    
+    {% endfor %}
+    </ol>
+{% endblock body %}
+
