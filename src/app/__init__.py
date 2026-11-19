@@ -16,7 +16,7 @@ class Base(DeclarativeBase): ...
 app = Flask(__name__)
 
 # Encryption
-# TODO: app.config["SECRET_KEY"] = os.environ["FLASK_SECRET_KEY"]
+app.config["SECRET_KEY"] = "flask-secret-key"
 
 # Session cookie parameters
 # app.config['SESSION_COOKIE_SECURE'] = True
