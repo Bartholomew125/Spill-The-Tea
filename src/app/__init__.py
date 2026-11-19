@@ -1,6 +1,7 @@
 import os
+from typing import Literal
 from flask import Flask, render_template, request
-from sqlalchemy import CheckConstraint, ForeignKey, PrimaryKeyConstraint, String
+from sqlalchemy import CheckConstraint, ForeignKey, PrimaryKeyConstraint, String, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from flask_sqlalchemy import SQLAlchemy
 
@@ -84,10 +85,27 @@ with app.app_context():
 def index():
     return render_template("index.html")
 
+
 @app.route("/search", methods=["GET", "POST"])
 def search():
     form = Search(request.form)
     res = []
     if request.method == "POST" and form.validate():
-        res = ["Result1", "Result2"]
+        selected_type: Literal["users", "posts"] = form.type_select.data
+        query: str = form.search_bar.data
+
+        match selected_type:
+            case "posts":
+                rows = db.session.execute(
+                    select(Post).where(Post.title.like(f"%{query}%"))
+                ).all()
+                res = [row[0].title for row in rows]
+            case "users":
+                rows = db.session.execute(
+                    select(User).where(User.display_name.like(f"%{query}%"))
+                ).all()
+                res = [row[0].display_name for row in rows]
+            case _:
+                return {"error": "Unknown search type selected"}, 400
+
     return render_template("search.html", form=form, res=res)
