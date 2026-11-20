@@ -184,6 +184,12 @@ def post():
 
     return render_template("post.html", form=form, title=title, errors=errors)
 
+
+@app.route("/post_created", methods=["GET", "POST"])
+def post_created():
+    return render_template("post_created.html")
+
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     form = RegisterForm(request.form)
