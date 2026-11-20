@@ -130,6 +130,60 @@ def search():
     return render_template("search.html", form=form, res=res)
 
 
+@app.route("/post", methods=["GET", "POST"])
+def post():
+    # Post creation is only for authenticated users
+    user_id = session.get("user_id")
+    if user_id is None:
+        return redirect("/login")
+    
+    form = PostForm(request.form, request.files)
+    title = "Create post"
+    errors = []
+    supported_formats = ["jpg", "jpeg", "png", "webp"]
+
+    if request.method == "POST" and form.validate():
+        post_title = form.title.data
+        post_description = form.description.data
+        images = form.images.data
+
+        # The form already enforced this
+        # The assertions are just for pylance
+        assert post_title is not None
+        assert post_description is not None
+
+        for image in images:
+            name = image.filename
+            if name.split(".")[-1].lower() not in supported_formats:
+                errors.append(f"Unsupported image format: {name}")
+
+        if not errors:
+            new_post = Post()
+            new_post.user_id = user_id
+            new_post.title = post_title
+            new_post.description = post_description
+
+            db.session.add(new_post)
+            db.session.flush()
+
+            # All images are currently saved locally in the following directory
+            os.makedirs(f"{app.static_folder}/post_images", exist_ok=True)
+
+            for image in images:
+                save_path = f"post_images/{image.filename}"
+                image.save(f"{app.static_folder}/{save_path}")
+
+                new_image = PostImage()
+                new_image.post_id = new_post.id
+                new_image.image_path = save_path
+
+                db.session.add(new_image)
+
+            db.session.commit()
+            return redirect("/post_created")
+
+    return render_template("post.html", form=form, title=title, errors=errors)
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     form = RegisterForm(request.form)
@@ -186,6 +240,7 @@ def login():
             # User id is preferred over username (email)
             # Since the id is fixed but username might change over time
             session["user_id"] = user.id
+            # TODO: If remember_me was set, then maybe add permanant or longer session
 
             #TODO: Redirect to e.g. home page on successful login
             return redirect("/")
