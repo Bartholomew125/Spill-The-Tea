@@ -1,0 +1,16 @@
+{% extends 'base_form.html' %}
+
+{% block head %}
+<title>{{ title }}</title>
+<link rel="stylesheet" href="/static/styles/delete_account.css">
+{% endblock head %}
+
+{% block body %}
+    <form action="" method="post">
+        {{ form.password.label }}
+        {{ form.password}}
+        {{ form.confirm_deletion.label }}
+        {{ form.confirm_deletion}}
+        {{ form.submit }}
+    </form>
+{% endblock body %}
