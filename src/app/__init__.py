@@ -2,10 +2,10 @@ import os
 from typing import Literal
 
 from flask import Flask, redirect ,render_template, request, session
-from sqlalchemy import CheckConstraint, ForeignKey, PrimaryKeyConstraint, String, insert, select
+from sqlalchemy import CheckConstraint, ForeignKey, PrimaryKeyConstraint, String, insert, select, delete
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from flask_sqlalchemy import SQLAlchemy
-from app.forms import RegisterForm, LoginForm, SearchForm
+from app.forms import RegisterForm, LoginForm, SearchForm, DeleteAccForm
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -120,6 +120,8 @@ def search():
                 return {"error": "Unknown search type selected"}, 400
 
     return render_template("search.html", form=form, res=res)
+
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     form = RegisterForm(request.form)
@@ -155,6 +157,7 @@ def register():
 
     return render_template("register.html", form=form, title=title, errors=errors)
 
+
 @app.route("/login", methods= ["GET", "POST"])
 def login():
     form = LoginForm(request.form)
@@ -183,3 +186,33 @@ def login():
             errors.append("Invalid email or password")
 
     return render_template("login.html", form=form, title=title, errors=errors)
+
+
+@app.route("/delete_account", methods=["GET", "POST"])
+def delete_account():
+    user_id = session.get("user_id")
+    if user_id is None:
+        return redirect("/login")
+
+    form = DeleteAccForm(request.form)
+    title = "Delete account"
+    errors = []
+
+    if request.method == "POST" and form.validate():
+        entered_password = form.password.data
+        assert entered_password is not None
+
+        user = db.session.execute(
+            select(User).where(User.id == user_id)
+        ).scalar_one_or_none()
+
+        if user and check_password_hash(user.password_hash, entered_password):
+            db.session.delete(user)
+            db.session.commit()
+            session.clear()
+
+            return redirect("/login")
+        else:
+            errors.append("Incorrect password")
+
+    return render_template("delete_account.html", form=form, title=title, errors=errors)
