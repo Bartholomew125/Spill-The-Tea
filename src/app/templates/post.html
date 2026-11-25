@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <header>
+        {% include 'navigation_menu.html' %}
+    </header>
+    <main>
+        {{ post.title }}
+        {{ creator }}
+        {{ post.description }}
+        {{ post.upvotes }}
+        {{ post.downvotes }}
+    </main>
+</body>
+</html>
