@@ -1,11 +1,12 @@
+from functools import wraps
 import os
 from typing import Literal
 
 from flask import Flask, redirect ,render_template, request, session
-from sqlalchemy import CheckConstraint, ForeignKey, PrimaryKeyConstraint, String, insert, select, delete
+from sqlalchemy import CheckConstraint, ForeignKey, PrimaryKeyConstraint, String, insert, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from flask_sqlalchemy import SQLAlchemy
-from app.forms import RegisterForm, LoginForm, SearchForm, PostForm
+from app.forms import RegisterForm, LoginForm, SearchForm, PostForm, DeleteAccForm
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -99,6 +100,18 @@ with app.app_context():
     db.create_all()
 
 
+# https://stackoverflow.com/questions/35307676/check-login-status-flask
+def login_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        print(session)
+        if "logged_in" in session:
+            return f(*args, **kwargs)
+        else:
+            return redirect("/login")
+    return wrap
+
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -131,11 +144,9 @@ def search():
 
 
 @app.route("/post", methods=["GET", "POST"])
-def post():
-    # Post creation is only for authenticated users
+@login_required
+def create_post():
     user_id = session.get("user_id")
-    if user_id is None:
-        return redirect("/login")
     
     form = PostForm(request.form, request.files)
     title = "Create post"
@@ -263,10 +274,9 @@ def post(id: int):
 
 
 @app.route("/delete_account", methods=["GET", "POST"])
+@login_required
 def delete_account():
     user_id = session.get("user_id")
-    if user_id is None:
-        return redirect("/login")
 
     form = DeleteAccForm(request.form)
     title = "Delete account"
