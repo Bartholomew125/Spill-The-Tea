@@ -144,7 +144,7 @@ def register():
                 insert(User).values({
                     "username": email,
                     "password_hash": password_hash,
-                    "display_name": "",
+                    "display_name": f"Distinguished Tea Enjoyer",
                     "biography": ""
                 })
             )
@@ -186,6 +186,16 @@ def login():
             errors.append("Invalid email or password")
 
     return render_template("login.html", form=form, title=title, errors=errors)
+
+
+@app.route("/post/<id>")
+def post(id: int):
+    post = db.session.get(Post, id)
+    if not post:
+        return {"error": "Post not found"}, 404
+    user = db.session.get(User, post.user_id)
+    creator = user.display_name if user else "Unknown User"
+    return render_template("post.html", post=post, creator=creator)
 
 
 @app.route("/delete_account", methods=["GET", "POST"])
