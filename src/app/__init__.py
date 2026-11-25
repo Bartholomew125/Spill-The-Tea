@@ -180,14 +180,9 @@ def post():
                 db.session.add(new_image)
 
             db.session.commit()
-            return redirect("/post_created")
+            return redirect(f"/post/{new_post.id}")
 
-    return render_template("post.html", form=form, title=title, errors=errors)
-
-
-@app.route("/post_created", methods=["GET", "POST"])
-def post_created():
-    return render_template("post_created.html")
+    return render_template("create_post.html", form=form, title=title, errors=errors)
 
 
 @app.route("/register", methods=["GET", "POST"])
