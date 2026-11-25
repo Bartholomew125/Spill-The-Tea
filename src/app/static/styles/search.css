@@ -1,9 +1,4 @@
-:root {
-    --border-color: black;
-    --border-width: 0.1rem;
-    --border-radius: 1rem;
-    --padding: 1rem;
-}
+@import url("vars.css");
 
 main {
     display: flex;
@@ -23,20 +18,25 @@ form {
 
 form > input {
     flex-grow: 1;
-    border: var(--border-width) solid var(--border-color);
+    border: var(--border-thinkness) solid var(--border-color);
     border-radius: var(--border-radius);
     padding: var(--padding);
 }
 
 form > select {
     appearance: none; /* Remove predefined styling */
-    border: var(--border-width) solid var(--border-color);
+    border: var(--border-thinkness) solid var(--border-color);
     border-radius: var(--border-radius);
     padding: var(--padding);
+    background-color: var(--background-color);
+}
+
+form > select:hover {
+    background-color: var(--background-color-hover);
 }
 
 /* https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/list-style */
-ol {
+#search_results {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -47,8 +47,8 @@ ol {
     gap: 1em;
 }
 
-ol > li {
-    border: var(--border-width) solid var(--border-color);
+#search_results > li {
+    border: var(--border-thinkness) solid var(--border-color);
     border-radius: var(--border-radius);
     padding: var(--padding);
 }

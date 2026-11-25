@@ -1,0 +1,60 @@
+@import url("vars.css");
+
+#nav_button {
+    display: block;
+    position: fixed;
+    right: 1em;
+    top: 1em;
+    border: var(--border-thinkness) solid var(--border-color);
+    border-radius: var(--border-radius);
+    width: 3em;
+    height: 3em;
+    background-color: var(--background-color);
+}
+
+#nav_button:hover {
+    background-color: var(--background-color-hover);
+}
+
+/* https://stackoverflow.com/questions/78233243/how-to-position-a-popover-in-css */
+#nav_popover {
+    inset: unset; /* remove default positioning */
+    right: 1em;
+    top: 3em;
+    border: var(--border-thinkness) solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: var(--background-color);
+}
+
+#nav_popover ol {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    list-style: none;
+    padding: var(--padding);
+    margin: 0;
+    gap: 1em;
+}
+
+#nav_popover li {
+    background-color: var(--background-color);
+    margin: auto;
+}
+
+#nav_popover a {
+    color: var(--color);
+    text-decoration: none;
+}
+
+#nav_popover a:link {
+    color: var(--color);
+}
+
+#nav_popover a:visited {
+    color: var(--color);
+}
+
+#nav_popover a:hover {
+    color: var(--background-color-hover);
+}
+

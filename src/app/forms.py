@@ -81,3 +81,17 @@ class LoginForm(Form):
     remember_me = BooleanField(label="Remember me")
 
     submit = SubmitField(label="Login")
+
+
+class DeleteAccForm(Form):
+    password = PasswordField(
+        label = "Password",
+        validators = [InputRequired(message="Please enter your password to proceed")]
+    )
+
+    confirm_deletion = BooleanField(
+        label = "I understand that deleting my account is permanent",
+        validators = [InputRequired(message="Please confirm your account deletion")]
+    )
+
+    submit = SubmitField(label="Delete account")

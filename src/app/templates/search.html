@@ -9,7 +9,7 @@
         {{ form.search_bar }}
         {{ form.type_select }}
     </form>
-    <ol>
+    <ol id="search_results">
     {% for row in res %}
         <li>{{ row }}</li>    
     {% endfor %}
