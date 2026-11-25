@@ -5,7 +5,7 @@ from flask import Flask, redirect ,render_template, request, session
 from sqlalchemy import CheckConstraint, ForeignKey, PrimaryKeyConstraint, String, insert, select, delete
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from flask_sqlalchemy import SQLAlchemy
-from app.forms import RegisterForm, LoginForm, SearchForm, DeleteAccForm
+from app.forms import RegisterForm, LoginForm, SearchForm, PostForm
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -16,7 +16,7 @@ class Base(DeclarativeBase): ...
 app = Flask(__name__)
 
 # Encryption
-app.config["SECRET_KEY"] = "flask-secret-key"
+app.config["SECRET_KEY"] = os.environ["FLASK_SECRET_KEY"]
 
 # Session cookie parameters
 # app.config['SESSION_COOKIE_SECURE'] = True
@@ -58,6 +58,14 @@ class Post(db.Model):
     description: Mapped[str] = mapped_column(String(1024))
     upvotes:     Mapped[int] = mapped_column(default=0)
     downvotes:   Mapped[int] = mapped_column(default=0)
+
+
+class PostImage(db.Model):
+    __tablename__ = "post_images"
+
+    id:        Mapped[int] = mapped_column(primary_key=True)
+    post_id:   Mapped[int] = mapped_column(ForeignKey(Post.id))
+    image_path: Mapped[str] = mapped_column(String(255))
 
 
 class Comment(db.Model):
@@ -122,6 +130,61 @@ def search():
     return render_template("search.html", form=form, res=res)
 
 
+@app.route("/post", methods=["GET", "POST"])
+def post():
+    # Post creation is only for authenticated users
+    user_id = session.get("user_id")
+    if user_id is None:
+        return redirect("/login")
+    
+    form = PostForm(request.form, request.files)
+    title = "Create post"
+    errors = []
+    supported_formats = ["jpg", "jpeg", "png", "webp"]
+
+    if request.method == "POST" and form.validate():
+        post_title = form.title.data
+        post_description = form.description.data
+        images = request.files.getlist(form.images.name)
+
+        # The form already enforced this
+        # The assertions are just for pylance
+        assert post_title is not None
+        assert post_description is not None
+
+        for image in images:
+            name = image.filename
+            if name.split(".")[-1].lower() not in supported_formats:
+                errors.append(f"Unsupported image format: {name}")
+
+        if not errors:
+            new_post = Post()
+            new_post.user_id = user_id
+            new_post.title = post_title
+            new_post.description = post_description
+
+            db.session.add(new_post)
+            db.session.flush()
+
+            # All images are currently saved locally in the following directory
+            os.makedirs(f"{app.static_folder}/post_images", exist_ok=True)
+
+            for image in images:
+                save_path = f"post_images/{image.filename}"
+                image.save(f"{app.static_folder}/{save_path}")
+
+                new_image = PostImage()
+                new_image.post_id = new_post.id
+                new_image.image_path = save_path
+
+                db.session.add(new_image)
+
+            db.session.commit()
+            return redirect(f"/post/{new_post.id}")
+
+    return render_template("create_post.html", form=form, title=title, errors=errors)
+
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     form = RegisterForm(request.form)
@@ -158,7 +221,7 @@ def register():
     return render_template("register.html", form=form, title=title, errors=errors)
 
 
-@app.route("/login", methods= ["GET", "POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm(request.form)
     title = "Login"
@@ -178,6 +241,7 @@ def login():
             # User id is preferred over username (email)
             # Since the id is fixed but username might change over time
             session["user_id"] = user.id
+            # TODO: If remember_me was set, then maybe add permanant or longer session
 
             #TODO: Redirect to e.g. home page on successful login
             return redirect("/")

@@ -6,6 +6,8 @@ from wtforms import (
   EmailField,
   PasswordField,
   SubmitField,
+  StringField,
+  MultipleFileField,
 )
 from wtforms.validators import InputRequired, Email, Length
 
@@ -17,7 +19,34 @@ class SearchForm(Form):
     )
     type_select = SelectField(choices=[("posts", "Posts"), ("users", "Users")])
 
-    
+
+class PostForm(Form):
+    title = StringField(
+        label = "Title",
+        validators = [
+            InputRequired(message="Please add a title to the post"),
+            Length(max=32, message="Please choose a shorter title"),
+        ]
+    )
+
+    images = MultipleFileField(
+        label = "Images",
+        validators = [
+            InputRequired(message="Please add at least one image to the post"),
+        ]
+    )
+
+    description = StringField(
+        label = "Description",
+        validators = [
+            InputRequired(message="Please add a description to the post"),
+            Length(max=1024, message="Please shorten the description"),
+        ]
+    )
+
+    submit = SubmitField(label="Upload post")
+
+
 class RegisterForm(Form):
     email = EmailField(
         label = "Email",
