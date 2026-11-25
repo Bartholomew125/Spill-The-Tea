@@ -16,7 +16,7 @@ class Base(DeclarativeBase): ...
 app = Flask(__name__)
 
 # Encryption
-# TODO: app.config["SECRET_KEY"] = os.environ["FLASK_SECRET_KEY"]
+app.config["SECRET_KEY"] = os.environ["FLASK_SECRET_KEY"]
 
 # Session cookie parameters
 # app.config['SESSION_COOKIE_SECURE'] = True
@@ -145,7 +145,7 @@ def post():
     if request.method == "POST" and form.validate():
         post_title = form.title.data
         post_description = form.description.data
-        images = form.images.data
+        images = request.files.getlist(form.images.name)
 
         # The form already enforced this
         # The assertions are just for pylance
