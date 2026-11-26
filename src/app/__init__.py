@@ -147,6 +147,7 @@ def search():
 @login_required
 def create_post():
     user_id = session.get("user_id")
+    assert user_id is not None
     
     form = PostForm(request.form, request.files)
     title = "Create post"
@@ -165,6 +166,7 @@ def create_post():
 
         for image in images:
             name = image.filename
+            assert name is not None
             if name.split(".")[-1].lower() not in supported_formats:
                 errors.append(f"Unsupported image format: {name}")
 
