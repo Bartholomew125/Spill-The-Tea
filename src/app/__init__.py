@@ -3,10 +3,10 @@ import os
 from typing import Literal
 
 from flask import Flask, redirect ,render_template, request, session
-from sqlalchemy import CheckConstraint, ForeignKey, PrimaryKeyConstraint, String, insert, select
+from sqlalchemy import CheckConstraint, ForeignKey, PrimaryKeyConstraint, String, insert, select, func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from flask_sqlalchemy import SQLAlchemy
-from app.forms import RegisterForm, LoginForm, SearchForm, PostForm, DeleteAccForm, LogOutForm
+from app.forms import RegisterForm, LoginForm, SearchForm, PostForm, DeleteAccForm, LogOutForm, LoadFeedForm
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -141,6 +141,20 @@ def search():
                 return {"error": "Unknown search type selected"}, 400
 
     return render_template("search.html", form=form, res=res)
+
+
+@app.route("/feed", methods=["GET", "POST"])
+def feed():
+    form = LoadFeedForm()
+
+    n = 5
+
+    posts = db.session.execute(
+        # Randomly sort the posts and then pick from top
+        select(Post).order_by(func.random()).limit(n)
+    ).scalars().all()
+
+    return render_template("feed.html", form=form, posts=posts)
 
 
 @app.route("/post", methods=["GET", "POST"])

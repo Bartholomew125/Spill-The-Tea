@@ -1,0 +1,23 @@
+{% extends 'base_form.html' %}
+
+{% block head %}
+<title> Feed </title>
+<link rel="stylesheet" href="/static/styles/feed.css">
+{% endblock head %}
+
+{% block body %}
+
+    {% for post in posts %}
+        <p> {{ post.title }}</p>
+        <p> {{ post.description }}</p>
+        <div class="votes">
+            <p> {{ post.upvotes }} </p>
+            <p> {{ post.downvotes }}</p>
+        </div>
+    {% endfor %}
+
+
+    <form action="" method="post">
+        {{ form.submit }}
+    </form>
+{% endblock body %}
