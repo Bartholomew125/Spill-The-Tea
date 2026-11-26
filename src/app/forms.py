@@ -47,6 +47,10 @@ class PostForm(Form):
     submit = SubmitField(label="Upload post")
 
 
+class LoadFeedForm(Form):
+    submit = SubmitField(label="Load more posts")
+
+
 class RegisterForm(Form):
     email = EmailField(
         label = "Email",
