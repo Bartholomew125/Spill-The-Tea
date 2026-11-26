@@ -1,0 +1,12 @@
+{% extends 'base_form.html' %}
+
+{% block head %}
+<title>{{ title }}</title>
+<link rel="stylesheet" href="/static/styles/logout.css">
+{% endblock head %}
+
+{% block body %}
+    <form action="" method="post">
+        {{ form.submit }}
+    </form>
+{% endblock body %}
