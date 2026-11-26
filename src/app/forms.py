@@ -95,3 +95,6 @@ class DeleteAccForm(Form):
     )
 
     submit = SubmitField(label="Delete account")
+
+class LogOutForm(Form):
+    submit = SubmitField(label="Log out")
