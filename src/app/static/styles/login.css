@@ -1,4 +1,12 @@
-@import url("register.css");
+@import url("base.css");
+
+
+body{
+    background-image: url("tea.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
 
 form > p {
     align-self: center;

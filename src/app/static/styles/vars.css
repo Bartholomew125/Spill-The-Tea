@@ -1,9 +1,13 @@
 :root {
-    --border-thinkness: 1px;
+    --border-thickness: 1px;
     --border-color: black;
-    --border-radius: 10px;
+    --border-radius: 15px;
     --padding: 10px;
-    --background-color: white;
-    --background-color-hover: grey;
-    --color: black;
+    --background-color: darkslateblue;
+    --background-color-hover: mediumslateblue;
+    --color: white;
+    /*The /0.3 is called alpha and controls transparency */
+    --blur-background-color: rgb(0 0 0 / 0.3);
+    --blur-border-color: rgb(255 255 255 / 0.3);
+    --blur-backdrop-filter: blur(10px);
 }
