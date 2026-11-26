@@ -1,0 +1,43 @@
+@import url("vars.css");
+
+body{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--color);
+    background-color: var(--background-color);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    background-color: var(--blur-background-color);
+    backdrop-filter: var(--blur-backdrop-filter);
+    border: var(--border-thickness) solid var(--blur-border-color);
+    border-radius: var(--border-radius);
+    padding: var(--padding);
+    gap: 1rem;
+    width: 20rem;
+}
+
+form > label {
+    align-self: center;
+}
+
+form > input {
+    border: var(--border-thickness) solid var(--blur-border-color);
+    border-radius: var(--border-radius);
+    padding: var(--padding);
+}
+
+form > .submit {
+    align-self: center;
+    width: 50%;
+    background-color: var(--blur-border-color);
+}
+
+form > .submit:hover{
+    background-color: var(--background-color-hover);
+}
