@@ -6,7 +6,7 @@ from flask import Flask, redirect ,render_template, request, session
 from sqlalchemy import CheckConstraint, ForeignKey, PrimaryKeyConstraint, String, insert, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from flask_sqlalchemy import SQLAlchemy
-from app.forms import RegisterForm, LoginForm, SearchForm, PostForm, DeleteAccForm
+from app.forms import RegisterForm, LoginForm, SearchForm, PostForm, DeleteAccForm, LogOutForm
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -273,6 +273,20 @@ def post(id: int):
     user = db.session.get(User, post.user_id)
     creator = user.display_name if user else "Unknown User"
     return render_template("post.html", post=post, creator=creator)
+
+
+@app.route("/logout", methods=["GET", "POST"])
+@login_required
+def logout():
+    form = LogOutForm()
+    title = "Log out"
+    errors = []
+
+    if request.method == "POST" and form.validate():
+        session.clear()
+        return redirect("/index")
+
+    return render_template("logout.html", form=form, title=title, errors=errors)
 
 
 @app.route("/delete_account", methods=["GET", "POST"])
